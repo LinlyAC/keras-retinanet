@@ -26,8 +26,9 @@ import tensorflow as tf
 
 # Allow relative imports when being executed as script.
 if __name__ == "__main__" and __package__ is None:
-    __package__ = "keras_retinanet.bin"
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+    import keras_retinanet.bin
+    __package__ = "keras_retinanet.bin"
 
 # Change these to absolute imports if you copy this script outside the keras_retinanet package.
 from ..preprocessing.coco import CocoGenerator
@@ -71,14 +72,10 @@ def main(args=None):
     print('Loading model, this may take a second...')
     model = keras.models.load_model(args.model, custom_objects=custom_objects)
 
-    # create image data generator object
-    test_image_data_generator = keras.preprocessing.image.ImageDataGenerator()
-
     # create a generator for testing data
     test_generator = CocoGenerator(
         args.coco_path,
-        args.set,
-        test_image_data_generator,
+        args.set
     )
 
     evaluate_coco(test_generator, model, args.score_threshold)
